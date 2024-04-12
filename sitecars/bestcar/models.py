@@ -8,6 +8,21 @@ from django import forms
 from django.forms import ModelForm
 
 
+
+class CarManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(cat_id=1)
+
+
+class BusManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(cat_id=2)
+
+class ObjectManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().all()
+
+
 class Publishing_a_trip(models.Model):
     SEATING = [
         (1, '1'),
@@ -21,14 +36,17 @@ class Publishing_a_trip(models.Model):
     models_auto = models.CharField(max_length=100,verbose_name="Модель автомобиля")
     date_time = models.DateTimeField(verbose_name="Дата и время")
     seating = models.PositiveSmallIntegerField(verbose_name= 'Количество мест', choices=SEATING, default=1)
-    cat = models.ForeignKey('Category',verbose_name="Катигория", on_delete=models.PROTECT)
+    cat = models.ForeignKey('Category',verbose_name="Категория", on_delete=models.PROTECT)
+    car = CarManager()
+    bus = BusManager()
+    objects = models.Manager()
 
     def __str__(self):
         return self.name
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100,verbose_name="Выберите транспортное средство")
+    name = models.CharField(max_length=100, db_index=True)
     def __str__(self):
         return self.name
 

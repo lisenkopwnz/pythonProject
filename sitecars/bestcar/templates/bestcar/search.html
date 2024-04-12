@@ -6,8 +6,9 @@
 </head>
 <body>
 <h1>HomePage</h1>
+
 <ul>
-  {% for item in object_list %}
+    {% for item in object_list %}
     <tr>
         <td>{{ item.name }}</td>
         <td>{{item.departure}}</td>
@@ -16,7 +17,7 @@
         <td>{{item.date_time}}</td>
         <td>{{item.seating}}</td>
     </tr>
-  {% endfor %}
+    {% endfor %}
 </ul>
 
 
