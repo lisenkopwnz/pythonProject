@@ -52,8 +52,7 @@ class Category(models.Model):
         return self.name
 
 class Publishing_a_tripForm(forms.ModelForm):
-    #def __init__(self, *args, **kwargs):
-        #super().__init__(*args, **kwargs)
+
     class Meta:
         model = Publishing_a_trip
         fields = ['name', 'departure', 'arrival', 'models_auto', 'date_time', 'seating','price','cat']
