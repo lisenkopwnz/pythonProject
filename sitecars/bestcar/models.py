@@ -37,6 +37,7 @@ class Publishing_a_trip(models.Model):
     date_time = models.DateTimeField(verbose_name="Дата и время")
     seating = models.PositiveSmallIntegerField(verbose_name= 'Количество мест', choices=SEATING, default=1)
     cat = models.ForeignKey('Category',verbose_name="Категория", on_delete=models.PROTECT)
+    price = models.PositiveSmallIntegerField(verbose_name="Цена")
     car = CarManager()
     bus = BusManager()
     objects = models.Manager()
@@ -51,11 +52,11 @@ class Category(models.Model):
         return self.name
 
 class Publishing_a_tripForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    #def __init__(self, *args, **kwargs):
+        #super().__init__(*args, **kwargs)
     class Meta:
         model = Publishing_a_trip
-        fields = ['name', 'departure', 'arrival', 'models_auto', 'date_time', 'seating','cat']
+        fields = ['name', 'departure', 'arrival', 'models_auto', 'date_time', 'seating','price','cat']
         widgets = { 'date_time': forms.DateTimeInput(attrs={'type':'datetime-local', 'class':'form-control'})
         }
 
