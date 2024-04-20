@@ -18,6 +18,7 @@ class BusManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(cat_id=2)
 
+
 class ObjectManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().all()
@@ -59,21 +60,22 @@ class Publishing_a_tripForm(forms.ModelForm):
         widgets = { 'date_time': forms.DateTimeInput(attrs={'type':'datetime-local', 'class':'form-control'})
         }
 
+
+    @classmethod
+    def __clean(cls,data):
+        if re.search(r'[^а-яА-ЯёЁ]',data):
+            raise ValidationError('Поле должно содержать только русские символы')
+        return data
+
     def clean_name(self):
         name = self.cleaned_data['name']
-        if re.search(r'[^а-яА-ЯёЁ]',name):
-            raise ValidationError('Поле должно содержать только русские символы')
-        return name
+        return self.__clean(name)
 
     def clean_departure(self):
         departure = self.cleaned_data['departure']
-        if re.search(r'[^а-яА-ЯёЁ]',departure):
-            raise ValidationError('Поле должно содержать только русские символы')
-        return departure
+        return self.__clean(departure)
 
     def clean_arrival(self):
         arrival = self.cleaned_data['arrival']
-        if re.search(r'[^а-яА-ЯёЁ]',arrival):
-            raise ValidationError('Поле должно содержать только русские символы')
-        return arrival
+        return self.__clean(arrival)
 

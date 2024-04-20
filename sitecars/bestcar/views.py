@@ -27,6 +27,12 @@ class HommeBestcar(ListView):
 
 class SearchTrip(ListView):
     template_name = 'bestcar/search.html'
+    def get_context_data(self, *args, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'Главная страница'
+
+        return context
 
     def get_queryset(self):
         departure = self.request.GET.get('d')
