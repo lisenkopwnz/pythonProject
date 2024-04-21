@@ -79,3 +79,4 @@ class Publishing_a_tripForm(forms.ModelForm):
         return self.__clean(arrival)
 
 
+
