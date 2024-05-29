@@ -1,38 +1,32 @@
 from django.shortcuts import render
-
+from bestcar.utils import DataMixin
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseNotFound, request, HttpRequest
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from bestcar.models import Publishing_a_trip, Publishing_a_tripForm
 from bestcar.models import *
 
-menu = [{'title': 'О сайте', 'url_name': 'about'},
-       {'title': 'Опубликовать поездку', 'url_name': 'post'},
-        ]
 
-class HommeBestcar(ListView):
+class HommeBestcar(DataMixin, ListView):
     model = Publishing_a_trip
-
     template_name = 'bestcar/index.html'
-    def get_context_data(self, *args, object_list=None, **kwargs):
+    title_page = 'Главная страница'
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu'] = menu
-        context['title'] = 'Главная страница'
+        return self.get_mixin_context(context)
 
-        return context
 
-class SearchTrip(ListView):
+class SearchTrip(DataMixin,ListView):
     template_name = 'bestcar/search.html'
-    def get_context_data(self, *args, object_list=None, **kwargs):
+    title_page = 'Поиск'
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu'] = menu
-        context['title'] = 'Главная страница'
-
-        return context
+        return self.get_mixin_context(context)
 
     def get_queryset(self):
         departure = self.request.GET.get('d')
@@ -58,14 +52,22 @@ class SearchTrip(ListView):
 
 
 
-class Post(CreateView):
+class Post(DataMixin, LoginRequiredMixin, CreateView):
     form_class = Publishing_a_tripForm
     template_name = 'bestcar/post.html'
     success_url = reverse_lazy('home')
-    def get_context_data(self, *args, object_list=None, **kwargs):
+    title_page = 'Опубликовать поездку'
+
+
+
+    def form_valid(self, form):
+        w = form.save(commit = False)
+        w.author = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Добавить поездку'
-        return context
+        return self.get_mixin_context(context)
 
 
 def page_not_found(request, exception):

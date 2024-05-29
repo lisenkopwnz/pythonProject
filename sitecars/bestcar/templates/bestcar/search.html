@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{title}}</title>
 </head>
 <body>
 <h1>Поиск</h1>
@@ -23,6 +23,7 @@
         <td>{{item.models_auto}}</td>
         <td>{{item.date_time}}</td>
         <td>{{item.seating}}</td>
+        <td>{{item.author.username|default:'Неизвестен'}}</td>
     </li>
     {% endfor %}
 </ul>

@@ -5,6 +5,22 @@
     <title>{{title}}</title>
 </head>
 <body>
+<form action="{% url 'users:profile' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-info">profile</button>
+</form>
+<form action="{% url 'users:register' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-info">register</button>
+</form>
+<form action="{% url 'users:logout' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-info">Logout</button>
+</form>
+<form action="{% url 'users:login' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-info">Login</button>
+</form>
 <ul>
     <li><a href="{% url 'home' %}">Главная страница</a></li>
     {% for m in menu %}
