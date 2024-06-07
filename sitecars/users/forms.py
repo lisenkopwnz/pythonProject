@@ -16,22 +16,22 @@ class LoginUserForms(AuthenticationForm):
 
 
 class Regestration_User_Form(UserCreationForm):
-    username = forms.CharField(label='Имя',widget=forms.TextInput(attrs={'class': 'form-input'}))
+    username = forms.CharField(label='Имя', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password1 = forms.CharField(label='Пороль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     password2 = forms.CharField(label='Повтор пороля', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
     class Meta:
         model = get_user_model()
-        fields = ['photo', 'username', 'first_name', 'last_name','email', 'password1','password2']
+        fields = ['photo', 'username', 'first_name', 'last_name', 'email', 'password1', 'password2']
         labels = {'email': 'E-mail',
-                  'first_name':'Фамилия',
-                  'last_name' : 'Отчество',
+                  'first_name': 'Фамилия',
+                  'last_name': 'Отчество',
                   }
 
     widgets = {'email': forms.TextInput(attrs={'class': 'form-input'}),
-                  'first_name': forms.TextInput(attrs={'class': 'form-input'}),
-                  'last_name': forms.TextInput(attrs={'class': 'form-input'}),
-                  }
+               'first_name': forms.TextInput(attrs={'class': 'form-input'}),
+               'last_name': forms.TextInput(attrs={'class': 'form-input'}),
+               }
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -39,25 +39,28 @@ class Regestration_User_Form(UserCreationForm):
             raise forms.ValidationError('Такая почта уже существует !')
         return email
 
+
 class UserProfile(ModelForm):
-    username = forms.CharField(disabled=True,label='Имя',
+    username = forms.CharField(disabled=True, label='Имя',
                                widget=forms.TextInput(attrs={'class': 'form-input'}))
-    email = forms.CharField(disabled=True,label='email',
-                               widget=forms.TextInput(attrs={'class': 'form-input'}))
+    email = forms.CharField(disabled=True, label='email',
+                            widget=forms.TextInput(attrs={'class': 'form-input'}))
 
     class Meta:
         model = get_user_model()
-        fields = ['photo', 'username','email', 'first_name', 'last_name']
+        fields = ['photo', 'username', 'email', 'first_name', 'last_name']
         labels = {'email': 'E-mail',
-                  'first_name':'Фамилия',
-                  'last_name' : 'Отчество',
+                  'first_name': 'Фамилия',
+                  'last_name': 'Отчество',
                   }
 
         widgets = {'first_name': forms.TextInput(attrs={'class': 'form-input'}),
                    'last_name': forms.TextInput(attrs={'class': 'form-input'}),
                    }
 
+
 class User_Password_change_form(PasswordChangeForm):
     old_password = forms.CharField(label='Старый пороль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     new_password1 = forms.CharField(label='Новый пороль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    new_password2 = forms.CharField(label='Потверждение пороля', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    new_password2 = forms.CharField(label='Потверждение пороля',
+                                    widget=forms.PasswordInput(attrs={'class': 'form-input'}))

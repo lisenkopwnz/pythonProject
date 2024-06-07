@@ -8,6 +8,8 @@ from django import forms
 from django.forms import ModelForm
 
 from django.contrib.auth import get_user_model
+import datetime
+import pytz
 
 
 
@@ -33,7 +35,7 @@ class Publishing_a_trip(models.Model):
         (3, '3'),
         (4, '4')
     ]
-    name = models.CharField(max_length=100,verbose_name="Имя")
+
     departure = models.CharField(max_length=100,verbose_name="Отправление")
     arrival = models.CharField(max_length=100,verbose_name="Прибытие")
     models_auto = models.CharField(max_length=100,verbose_name="Модель автомобиля")
@@ -41,17 +43,24 @@ class Publishing_a_trip(models.Model):
     seating = models.PositiveSmallIntegerField(verbose_name= 'Количество мест', choices=SEATING, default=1)
     cat = models.ForeignKey('Category',verbose_name="Категория", on_delete=models.PROTECT)
     price = models.PositiveSmallIntegerField(verbose_name="Цена")
-    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name='post', null=True, default=None)
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='post', null=True, default=None)
     car = CarManager()
     bus = BusManager()
     objects = models.Manager()
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Опубликованные поездки'
         verbose_name_plural = 'Опубликованные поездки'
+        ordering = ('date_time',)
+
+    def __str__(self):
+        return str(self.author)
+
+    def clean(self):
+        today = datetime.datetime.now().replace(tzinfo=pytz.UTC)
+        if today > self.date_time:
+            raise ValidationError('Введите корректную дату')
+
 
 
 class Category(models.Model):
@@ -68,7 +77,7 @@ class Publishing_a_tripForm(forms.ModelForm):
 
     class Meta:
         model = Publishing_a_trip
-        fields = ['name', 'departure', 'arrival', 'models_auto', 'date_time', 'seating','price','cat']
+        fields = [ 'departure', 'arrival', 'models_auto', 'date_time', 'seating','price','cat']
         widgets = { 'date_time': forms.DateTimeInput(attrs={'type':'datetime-local', 'class':'form-control'})
         }
 
@@ -78,9 +87,6 @@ class Publishing_a_tripForm(forms.ModelForm):
             raise ValidationError('Поле должно содержать только русские символы')
         return data
 
-    def clean_name(self):
-        name = self.cleaned_data['name']
-        return self.__clean(name)
 
     def clean_departure(self):
         departure = self.cleaned_data['departure']
