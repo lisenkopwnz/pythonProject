@@ -1,19 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% extends 'bestcar/base.html' %}
+{% block content %}
 
     <title>Профиль пользователя</title>
-</head>
-<body>
-<ul>
-    <li><a href="{% url 'home' %}">Главная страница</a></li>
-    {% for m in menu %}
-    <li>
-        <a href="{% url m.url_name %}">{{ m.title }}</a>
-    {% endfor %}
-    </li>
-</ul>
+
 <form method="post" enctype = 'multipart/form-data'>
     {% csrf_token %}
     {% if user.photo %}
@@ -25,10 +14,14 @@
     <p><button type="submit">Сохранить</button></p>
 
 </form>
-<p> <a href="{% url 'users:password_change' %}">Сменить пароль</a> </p>
+<p> <a href="{% url 'users:password_change' %}" title ='Сменить пароль для текущего пользователя'>Сменить пароль</a> </p>
 <form action="{% url 'users:delete' %}" method="post">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-info">Удалить аккаунт</button>
+
+<form action="{% url 'users:logout' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-info">Logout</button>
+            </form>
 </form>
-</body>
-</html>
+{% endblock %}

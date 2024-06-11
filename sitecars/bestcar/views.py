@@ -78,3 +78,4 @@ def about(request):
     previous_url = request.META.get('HTTP_REFERER')
     return render(request, 'bestcar/about.html',
                       {'previous_url': previous_url})
+
