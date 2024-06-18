@@ -1,17 +1,20 @@
+
+
+
 .menu {
     display: flex;
+    background: white;
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+    align-items: center;
+
+   /*justify-content: space-between;*/
   }
+
+
 a {
   text-decoration: none; /* Убираем подчеркивания для ссылок */
-}
-
-
-ul {
-  background: white;
-  list-style: none;
-  margin: 0;
-  padding-left: 0;
-  align-items: center;
 }
 
 li {
@@ -25,6 +28,7 @@ li {
   transition-duration: 0.5s;
 }
 
+
 li a {
   color: #4D88FF;
 }
@@ -35,7 +39,7 @@ li:hover {
 }
 
 ul li ul {
-  background: orange;
+  background: white;
   visibility: hidden;
   opacity: 0;
   min-width: 5rem;

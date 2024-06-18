@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <nav>
+
         {% block menu %}
         <ul class="menu" >
             <li><a href="{% url 'home' %}">
@@ -18,7 +18,7 @@
             {% for m in menu %}
             <li> <a href="{% url m.url_name %}">{{ m.title }}</a></li>
             {% endfor %}
-            <li><a href="#">About<i class="fa fa-angle-down"></i></a>
+            <li><a href="#">About<i class="user"></i></a>
                 <ul class="submenu">
                     <li> <a href="{% url 'users:profile' %}">Профиль</a></li>
                     <li> <a href="{% url 'users:register' %}">Регистрация</a></li>
@@ -28,7 +28,7 @@
 
         </ul>
         {% endblock menu %}
-    </nav>
+
     {% block content %}
     {% endblock %}
 </body>

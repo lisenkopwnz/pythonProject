@@ -39,7 +39,8 @@ class Publishing_a_trip(models.Model):
     departure = models.CharField(max_length=100,verbose_name="Отправление")
     arrival = models.CharField(max_length=100,verbose_name="Прибытие")
     models_auto = models.CharField(max_length=100,verbose_name="Модель автомобиля")
-    date_time = models.DateTimeField(verbose_name="Дата и время")
+    departure_time = models.DateTimeField(verbose_name="Время отправления")
+    arrival_time = models.DateTimeField(verbose_name="Время прибытия",default=None)
     seating = models.PositiveSmallIntegerField(verbose_name= 'Количество мест', choices=SEATING, default=1)
     cat = models.ForeignKey('Category',verbose_name="Категория", on_delete=models.PROTECT)
     price = models.PositiveSmallIntegerField(verbose_name="Цена")
@@ -51,14 +52,14 @@ class Publishing_a_trip(models.Model):
     class Meta:
         verbose_name = 'Опубликованные поездки'
         verbose_name_plural = 'Опубликованные поездки'
-        ordering = ('date_time',)
+        ordering = ('departure_time',)
 
     def __str__(self):
         return str(self.author)
 
     def clean(self):
         today = datetime.datetime.now().replace(tzinfo=pytz.UTC)
-        if today > self.date_time:
+        if today > self.departure_time:
             raise ValidationError('Введите корректную дату')
 
 
@@ -77,8 +78,9 @@ class Publishing_a_tripForm(forms.ModelForm):
 
     class Meta:
         model = Publishing_a_trip
-        fields = [ 'departure', 'arrival', 'models_auto', 'date_time', 'seating','price','cat']
-        widgets = { 'date_time': forms.DateTimeInput(attrs={'type':'datetime-local', 'class':'form-control'})
+        fields = [ 'departure', 'arrival', 'models_auto', 'departure_time','arrival_time', 'seating','price','cat']
+        widgets = { 'departure_time': forms.DateTimeInput(attrs={'type':'datetime-local', 'class':'form-control'}),
+                    'arrival_time': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'})
         }
 
     @classmethod

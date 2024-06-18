@@ -2,7 +2,7 @@ from django.shortcuts import render
 from bestcar.utils import DataMixin
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseNotFound, request, HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from bestcar.models import Publishing_a_trip, Publishing_a_tripForm
 from bestcar.models import *
+from sitecars import settings
 
 
 class HommeBestcar(DataMixin, ListView):
@@ -26,7 +27,7 @@ class SearchTrip(DataMixin,ListView):
     title_page = 'Поиск'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        return self.get_mixin_context(context)
+        return self.get_mixin_context(context,default_image=settings.DEFAULT_USER_IMAGE)
 
     def get_queryset(self):
         departure = self.request.GET.get('d')
@@ -37,17 +38,17 @@ class SearchTrip(DataMixin,ListView):
         if cat == 'both':
             object_list = Publishing_a_trip.objects.filter(
                 Q(departure__istartswith=departure) & Q(arrival__istartswith=arrival)
-                & Q(seating__istartswith=seating) & Q(date_time__startswith=data))
+                & Q(seating__istartswith=seating) & Q(departure_time__startswith=data))
             return object_list
         elif cat == 'car':
             object_list = Publishing_a_trip.car.filter(
                 Q(departure__istartswith=departure) & Q(arrival__istartswith=arrival)
-                & Q(seating__istartswith=seating) & Q(date_time__startswith=data))
+                & Q(seating__istartswith=seating) & Q(departure_time__startswith=data))
             return object_list
         elif cat == 'bus':
             object_list = Publishing_a_trip.bus.filter(
                 Q(departure__istartswith=departure) & Q(arrival__istartswith=arrival)
-                & Q(seating__istartswith=seating) & Q(date_time__startswith=data))
+                & Q(seating__istartswith=seating) & Q(departure_time__startswith=data))
             return object_list
 
 
@@ -58,8 +59,6 @@ class Post(DataMixin, LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('home')
     title_page = 'Опубликовать поездку'
 
-
-
     def form_valid(self, form):
         w = form.save(commit = False)
         w.author = self.request.user
@@ -68,6 +67,15 @@ class Post(DataMixin, LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context)
+
+
+def to_book(request,trip_id):
+    obj = get_object_or_404(Publishing_a_trip, pk=trip_id)
+    return render(request, 'bestcar/to_book_a_trip.html',{'obj':obj})
+
+
+
+
 
 
 def page_not_found(request, exception):
