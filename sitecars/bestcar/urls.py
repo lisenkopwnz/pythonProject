@@ -10,7 +10,8 @@ urlpatterns = [
     path('search/',SearchTrip.as_view(), name='search'),
     path('post/', Post.as_view(), name='post'),
     path('about/', views.about, name='about'),
-    path('to_book/<int:trip_id>/', views.to_book, name='to_book'),
+    path('to_book/<slug:trip_slug>/', views.to_book, name='to_book'),
+    path('booking/checkout/<slug:trip_slug>/', views.booking_checkout, name='booking'),
 
 
 ]

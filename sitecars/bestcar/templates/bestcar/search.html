@@ -6,7 +6,7 @@
     <div class="bar"></div>
     <div class="search_result">
     {% for item in object_list  %}
-    <a href=" {%url 'to_book' item.id %} ">
+    <a href=" {{item.get_absolute_url}} ">
     <div class="result_trip" >
         <p class="departure"> {{item.departure}} </p>
         <p class="arrival"> {{item.arrival}} </p>

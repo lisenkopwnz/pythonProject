@@ -1,4 +1,4 @@
-{% load bestcar_tags%}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +6,19 @@
     <title>Title</title>
 </head>
 <body>
-
+<p><a href="{% url 'booking' obj.slug %}" >Продолжить</a></p>
 <p> {{obj.departure}}</p>
+<p> {{obj.arrival}}</p>
+<p> {{obj.departure_time}}</p>
+<p> {{obj.departure_arrival}}</p>
+<p> {{obj.price}}</p>
+<p> {{obj.author.username}}</p>
+        {%  if obj.author.photo   %}
+            <img src="{{ obj.author.photo.url }}"  />
+        {% else %}
+            <img src ='{{default_image}}'  />
+        {% endif %}
+
 
 </body>
 </html>

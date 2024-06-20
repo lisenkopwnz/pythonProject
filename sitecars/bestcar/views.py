@@ -13,6 +13,7 @@ from bestcar.models import *
 from sitecars import settings
 
 
+
 class HommeBestcar(DataMixin, ListView):
     model = Publishing_a_trip
     template_name = 'bestcar/index.html'
@@ -68,12 +69,14 @@ class Post(DataMixin, LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context)
 
-#ddd
-def to_book(request,trip_id):
-    obj = get_object_or_404(Publishing_a_trip, pk=trip_id)
-    return render(request, 'bestcar/to_book_a_trip.html',{'obj':obj})
 
+def to_book(request,trip_slug):
+    obj = get_object_or_404(Publishing_a_trip, slug=trip_slug)
+    return render(request, 'bestcar/to_book_a_trip.html',{'obj':obj, 'default_image':settings.DEFAULT_USER_IMAGE})
 
+def booking_checkout(request,trip_slug):
+    obj = get_object_or_404(Publishing_a_trip, slug=trip_slug)
+    return render(request, 'bestcar/booking_checkout.html',{'obj':obj})
 
 
 
