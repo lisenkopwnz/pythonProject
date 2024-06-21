@@ -101,6 +101,7 @@ class Publishing_a_tripForm(forms.ModelForm):
                    'arrival_time': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'})
                    }
 
+
     @classmethod
     def __clean(cls, data):
         if re.search(r'[^а-яА-ЯёЁ]', data):
