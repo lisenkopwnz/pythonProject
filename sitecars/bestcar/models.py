@@ -8,6 +8,8 @@ from django import forms
 from django.forms import ModelForm
 
 from django.contrib.auth import get_user_model
+
+from django.utils import timezone
 import datetime
 import pytz
 
@@ -15,6 +17,10 @@ import string
 import random
 
 from django.urls import reverse
+
+from .validators import *
+
+
 
 
 class CarManager(models.Manager):
@@ -43,8 +49,8 @@ class Publishing_a_trip(models.Model):
     departure = models.CharField(max_length=100, verbose_name="Отправление")
     arrival = models.CharField(max_length=100, verbose_name="Прибытие")
     models_auto = models.CharField(max_length=100, verbose_name="Модель автомобиля")
-    departure_time = models.DateTimeField(verbose_name="Время отправления")
-    arrival_time = models.DateTimeField(verbose_name="Время прибытия", default=None)
+    departure_time = models.DateTimeField(verbose_name="Время отправления", validators=[check_departure_time])
+    arrival_time = models.DateTimeField(verbose_name="Время прибытия", default=None, validators=[check_arrival_time])
     seating = models.PositiveSmallIntegerField(verbose_name='Количество мест', choices=SEATING, default=1)
     cat = models.ForeignKey('Category', verbose_name="Категория", on_delete=models.PROTECT)
     price = models.PositiveSmallIntegerField(verbose_name="Цена")
@@ -56,6 +62,10 @@ class Publishing_a_trip(models.Model):
 
     def get_absolute_url(self):
         return reverse('to_book', kwargs={'trip_slug': self.slug})
+
+
+
+
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -70,11 +80,6 @@ class Publishing_a_trip(models.Model):
 
     def __str__(self):
         return str(self.author)
-
-    def clean(self):
-        today = datetime.datetime.now().replace(tzinfo=pytz.UTC)
-        if today > self.departure_time:
-            raise ValidationError('Введите корректную дату')
 
 
 class Category(models.Model):
