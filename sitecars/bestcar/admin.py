@@ -15,6 +15,12 @@ class Category_admin(admin.ModelAdmin):
     list_display_links = ('id',)
     list_display = ('id',)
 
+    def get_actions(self, request):  # Убираем возможность удалить поле модели Category через админпанель
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
 
 
 

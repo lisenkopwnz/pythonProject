@@ -1,8 +1,5 @@
 from django.db import models
 
-import re
-
-from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
 from django.forms import ModelForm
@@ -46,11 +43,11 @@ class Publishing_a_trip(models.Model):
         (4, '4')
     ]
 
-    departure = models.CharField(max_length=100, verbose_name="Отправление")
-    arrival = models.CharField(max_length=100, verbose_name="Прибытие")
+    departure = models.CharField(max_length=100, verbose_name="Отправление",validators=[Validators_language_model()])
+    arrival = models.CharField(max_length=100, verbose_name="Прибытие", validators=[Validators_language_model()])
     models_auto = models.CharField(max_length=100, verbose_name="Модель автомобиля")
-    departure_time = models.DateTimeField(verbose_name="Время отправления", validators=[check_departure_time])
-    arrival_time = models.DateTimeField(verbose_name="Время прибытия", default=None, validators=[check_arrival_time])
+    departure_time = models.DateTimeField(verbose_name="Время отправления", validators=[Validators_date_model()])
+    arrival_time = models.DateTimeField(verbose_name="Время прибытия", default=None, validators=[Validators_date_model()])
     seating = models.PositiveSmallIntegerField(verbose_name='Количество мест', choices=SEATING, default=1)
     cat = models.ForeignKey('Category', verbose_name="Категория", on_delete=models.PROTECT)
     price = models.PositiveSmallIntegerField(verbose_name="Цена")
@@ -88,6 +85,12 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
+    def save(self, *args, **kwargs):  #Переопределяем метод save, который убирает возможность удаленя поля в админпонели
+        if self.name != 'На машине' or 'На автобусе':
+            super(Category, self).delete(*args, **kwargs)
+
+
     class Meta:
         verbose_name = 'Категории'
         verbose_name_plural = 'Категории'
@@ -102,16 +105,4 @@ class Publishing_a_tripForm(forms.ModelForm):
                    }
 
 
-    @classmethod
-    def __clean(cls, data):
-        if re.search(r'[^а-яА-ЯёЁ]', data):
-            raise ValidationError('Поле должно содержать только русские символы')
-        return data
 
-    def clean_departure(self):
-        departure = self.cleaned_data['departure']
-        return self.__clean(departure)
-
-    def clean_arrival(self):
-        arrival = self.cleaned_data['arrival']
-        return self.__clean(arrival)
