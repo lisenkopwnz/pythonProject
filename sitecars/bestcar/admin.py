@@ -4,6 +4,16 @@ from .models import Publishing_a_trip,Category
 
 @admin.register(Publishing_a_trip)
 class Publishing_a_trip_admin(admin.ModelAdmin):
+    # Разделяем форму на две части
+    fieldsets = [
+        ('Основная информация',{'fields' : ['departure', 'arrival', 'departure_time', 'arrival_time','price']
+                                }),
+
+        ('Дополнительная информация', {'fields' : ['seating', 'cat', 'author', 'slug']
+                                       })
+
+    ]
+
     list_display_links = ('id',)
     list_filter = ('departure','arrival','departure_time','arrival_time' ,'cat', 'price', 'seating')
     list_display = ('id', 'departure', 'arrival','models_auto',

@@ -61,9 +61,6 @@ class Publishing_a_trip(models.Model):
         return reverse('to_book', kwargs={'trip_slug': self.slug})
 
 
-
-
-
     def save(self, *args, **kwargs):
         if not self.slug:
             all_symbols = string.ascii_uppercase + string.digits
