@@ -1,6 +1,10 @@
 {% extends 'bestcar/base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
 {% block content %}
-    <title>{{title}}</title>
 
 <form action="{% url 'search' %}" method="get">
   <input name="d" type="text" placeholder="Откуда...">

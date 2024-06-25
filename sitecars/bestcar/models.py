@@ -36,6 +36,7 @@ class ObjectManager(models.Manager):
 
 
 class Publishing_a_trip(models.Model):
+
     SEATING = [
         (1, '1'),
         (2, '2'),

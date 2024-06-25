@@ -23,6 +23,15 @@ class HommeBestcar(DataMixin, ListView):
         return self.get_mixin_context(context)
 
 
+class Bus_trip(DataMixin,ListView):
+    model = Publishing_a_trip
+    template_name = 'bestcar/bus_trip.html'
+    title_page = 'На автобусе'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(context)
+
 class SearchTrip(DataMixin,ListView):
     template_name = 'bestcar/search.html'
     title_page = 'Поиск'
