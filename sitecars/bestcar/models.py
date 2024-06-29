@@ -54,9 +54,10 @@ class Publishing_a_trip(models.Model):
     price = models.PositiveSmallIntegerField(verbose_name="Цена")
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='post', null=True, default=None)
     slug = models.SlugField(max_length=100, unique=True, db_index=True)
+    objects = models.Manager()
     car = CarManager()
     bus = BusManager()
-    objects = models.Manager()
+
 
     def get_absolute_url(self):
         return reverse('to_book', kwargs={'trip_slug': self.slug})

@@ -13,4 +13,6 @@ urlpatterns = [
     path('to_book/<slug:trip_slug>/', views.to_book, name='to_book'),
     path('booking/checkout/<slug:trip_slug>/', views.booking_checkout, name='booking'),
 
+    path('your-server-endpoint/', views.json_form_view, name='json_form'),
+
 ]

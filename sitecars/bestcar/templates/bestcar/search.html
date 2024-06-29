@@ -7,9 +7,11 @@
 {% block content %}
 {% load static %}
 
+
+
 <link rel="stylesheet" type="text/css" href="{% static 'bestcar/css/style_search.css' %}">
     <div class="bar"></div>
-    <div class="search_result">
+    <div class="search_result" id="results-container">
     {% for item in object_list  %}
     <a href=" {{item.get_absolute_url}} ">
     <div class="result_trip" >
@@ -34,8 +36,19 @@
     </div></a>
     {% endfor %}
     </div>
-    <div class =" filter">
-    </div>
 
+
+
+<form id="jsonForm">
+
+    <label for="checkbox1">По времени:</label>
+    <input type="checkbox" id="checkbox1" name="checkbox1" value="true"><br><br>
+
+    <label for="checkbox2">По дате:</label>
+    <input type="checkbox" id="checkbox2" name="checkbox2" value="true"><br><br>
+
+    <button type="submit">Submit</button>
+</form>
+<div id="output"></div>
 
 {% endblock %}

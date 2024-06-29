@@ -5,12 +5,16 @@ from django.http import HttpResponse, HttpResponseNotFound, request, HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, TemplateView
+from django.views.generic import ListView, CreateView, TemplateView,View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from bestcar.models import Publishing_a_trip, Publishing_a_tripForm
 from bestcar.models import *
 from sitecars import settings
+from django.http import JsonResponse
+
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 class HommeBestcar(DataMixin, TemplateView):
@@ -73,6 +77,7 @@ class SearchTrip(DataMixin, ListView):
             Q(departure_time__startswith=data))
         return object_list
 
+
 class Post(DataMixin, LoginRequiredMixin, CreateView):
     form_class = Publishing_a_tripForm
     template_name = 'bestcar/post.html'
@@ -91,6 +96,7 @@ class Post(DataMixin, LoginRequiredMixin, CreateView):
 
 def to_book(request, trip_slug):
     obj = get_object_or_404(Publishing_a_trip, slug=trip_slug)
+
     return render(request, 'bestcar/to_book_a_trip.html', {'obj': obj, 'default_image': settings.DEFAULT_USER_IMAGE})
 
 
@@ -107,3 +113,31 @@ def about(request):
     previous_url = request.META.get('HTTP_REFERER')
     return render(request, 'bestcar/about.html',
                   {'previous_url': previous_url})
+
+
+@csrf_exempt
+def json_form_view(request):
+    if request.method == 'POST':
+
+        # Извлекаем данные из запроса
+        data = request.body.decode('utf-8')
+        data_json = json.loads(data)
+        print(data)
+        print(data_json)
+
+        # Извлекаем ключ и значение из данных
+
+        key = data_json.get('checkbox1')
+        print(key)
+        value = data_json.get('checkbox2')
+        print(value)
+
+        # Логика обработки данных
+
+
+        result = {"success": True, "message": f"Received key={key}, value={value}"}
+        # Возвращаем ответ в формате JSON
+        return JsonResponse(result)
+    else:
+        # Обработка других HTTP-методов или возврат ошибки для несоответствующих запросов
+        return JsonResponse({"error": "Invalid request method"}, status=405)
