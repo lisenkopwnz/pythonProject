@@ -34,9 +34,7 @@ class ObjectManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().all()
 
-
-class Publishing_a_trip(models.Model):
-
+class Base(models.Model):
     SEATING = [
         (1, '1'),
         (2, '2'),
@@ -44,16 +42,23 @@ class Publishing_a_trip(models.Model):
         (4, '4')
     ]
 
-    departure = models.CharField(max_length=100, verbose_name="Отправление",validators=[Validators_language_model()])
-    arrival = models.CharField(max_length=100, verbose_name="Прибытие", validators=[Validators_language_model()])
-    models_auto = models.CharField(max_length=100, verbose_name="Модель автомобиля")
-    departure_time = models.DateTimeField(verbose_name="Время отправления", validators=[Validators_date_model()])
-    arrival_time = models.DateTimeField(verbose_name="Время прибытия", default=None, validators=[Validators_date_model()])
-    seating = models.PositiveSmallIntegerField(verbose_name='Количество мест', choices=SEATING, default=1)
-    cat = models.ForeignKey('Category', verbose_name="Категория", on_delete=models.PROTECT)
-    price = models.PositiveSmallIntegerField(verbose_name="Цена")
-    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='post', null=True, default=None)
+    departure = models.CharField(max_length=100, verbose_name="отправление", validators=[Validators_language_model()])
+    arrival = models.CharField(max_length=100, verbose_name="прибытие", validators=[Validators_language_model()])
+    models_auto = models.CharField(max_length=100, verbose_name="модель автомобиля")
+    departure_time = models.DateTimeField(verbose_name="время отправления", validators=[Validators_date_model()])
+    arrival_time = models.DateTimeField(verbose_name="время прибытия", default=None,validators=[Validators_date_model()])
+    seating = models.PositiveSmallIntegerField(verbose_name='количество мест', choices=SEATING, default=1)
+    reserved_seats = models.PositiveIntegerField(verbose_name='количество_зарезервиронных_мест', default=0)
+    cat = models.ForeignKey('Category', verbose_name="категория", on_delete=models.PROTECT)
+    price = models.PositiveSmallIntegerField(verbose_name="цена")
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="%(app_label)s_%(class)s_author", null=True, default=None)
     slug = models.SlugField(max_length=100, unique=True, db_index=True)
+
+    class Meta:
+        abstract = True
+
+        
+class Publishing_a_trip(Base):
     objects = models.Manager()
     car = CarManager()
     bus = BusManager()
@@ -76,6 +81,13 @@ class Publishing_a_trip(models.Model):
 
     def __str__(self):
         return str(self.author)
+
+class Booking(Base):
+    reserved_seats=models.PositiveIntegerField(verbose_name='количество_зарезервиронных_мест',default=0)
+    class Meta:
+        verbose_name = 'зарезервированные поездки'
+        verbose_name_plural = 'зарезервированные поездки'
+
 
 
 class Category(models.Model):
